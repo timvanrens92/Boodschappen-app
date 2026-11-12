@@ -1,0 +1,19 @@
+{
+  "name": "boodschappen-app",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "offers": "node scripts/fetch-offers.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "2.45.4"
+  },
+  "devDependencies": {
+    "playwright": "1.47.2",
+    "vite": "5.4.8"
+  }
+}

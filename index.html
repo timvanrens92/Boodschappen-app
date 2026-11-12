@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Boodschappen</title>
+<meta name="description" content="Gedeelde boodschappenlijst met Jumbo- en Plus-aanbiedingen">
+<meta name="theme-color" content="#5a2b6c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Boodschappen">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+</head>
+<body>
+<div id="login" class="login" hidden>
+  <div class="login-card">
+    <img src="icons/icon-192.png" alt="" width="64" height="64">
+    <h1>Boodschappen</h1>
+    <p class="sub">Log in met het account dat voor jou is aangemaakt.</p>
+    <form id="loginForm" autocomplete="on">
+      <label for="loginEmail">E-mailadres</label>
+      <input id="loginEmail" type="email" autocomplete="username" required>
+      <label for="loginPass">Wachtwoord</label>
+      <input id="loginPass" type="password" autocomplete="current-password" required>
+      <button class="btn" id="loginBtn" type="submit">Inloggen</button>
+    </form>
+    <p class="notice" id="loginMsg" hidden></p>
+  </div>
+</div>
+<div id="app" hidden>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>Boodschappen</h1>
+      <div class="sub" id="offerStamp">Aanbiedingen Jumbo &amp; Plus</div>
+    </div>
+    <button type="button" class="iconbtn" id="menuBtn" data-act="menu" aria-label="Meer opties"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></button>
+  </header>
+  <div class="notice" id="notice" hidden></div>
+  <nav class="tabs" role="tablist"><div class="in">
+    <button role="tab" id="t-lijst" data-tab="lijst" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M3.5 6l1.2 1.2L7 5M3.5 12l1.2 1.2L7 11M3.5 18l1.2 1.2L7 17"/></svg>Lijst<span class="n" id="cntList"></span></button>
+    <button role="tab" id="t-vaste" data-tab="vaste" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="13" rx="2"/><path d="M7 4h10M9 12h6M9 16h4"/></svg>Vaste lijsten<span class="n" id="cntTpl"></span></button>
+    <button role="tab" id="t-aanbiedingen" data-tab="aanbiedingen" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>Aanbiedingen<span class="n" id="cntOffers"></span></button>
+    <button role="tab" id="t-geschiedenis" data-tab="geschiedenis" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h14v18l-3-2-2 2-2-2-2 2-2-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg>Eerder<span class="n" id="cntTrips"></span></button>
+  </div></nav>
+  <div id="sheetHost"></div>
+  <div class="toast" id="toast" hidden></div>
+
+  <section class="view" id="v-lijst">
+    <div class="shopbar"><b id="shopTitle">Winkelmodus</b><button type="button" data-act="shop-off">Klaar</button></div>
+    <div id="listsBar"></div>
+    <div id="recipeBox"></div>
+    <div class="add"><div class="in">
+      <form id="addForm" autocomplete="off">
+        <input id="addInput" placeholder="Wat moet er in het mandje?" aria-label="Product toevoegen" enterkeyhint="done">
+        <button class="btn" type="submit">Voeg toe</button>
+      </form>
+      <div class="sugg" id="sugg" hidden></div>
+    </div></div>
+    <div id="planBox"></div>
+    <div id="listBox"></div>
+    <div id="finishBox"></div>
+  </section>
+
+  <section class="view" id="v-vaste" hidden>
+    <div id="tplBox"></div>
+  </section>
+
+  <section class="view" id="v-aanbiedingen" hidden>
+    <div class="filters">
+      <div class="seg" id="storeSeg">
+        <button aria-pressed="true" data-s="all">Alle</button>
+        <button aria-pressed="false" data-s="jumbo">Jumbo</button>
+        <button aria-pressed="false" data-s="plus">Plus</button>
+      </div>
+      <input id="offerSearch" placeholder="Zoek in aanbiedingen" aria-label="Zoek in aanbiedingen">
+    </div>
+    <div id="offerBox"></div>
+  </section>
+
+  <section class="view" id="v-geschiedenis" hidden>
+    <div id="histBox"></div>
+  </section>
+</div>
+
+</div>
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
