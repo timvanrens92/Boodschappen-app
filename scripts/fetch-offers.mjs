@@ -8,7 +8,7 @@ import { parseOffers, nextTuesday, isoWeek, norm } from './offers-lib.mjs';
 
 const SOURCES = {
   jumbo: ['https://www.jumbo.com/aanbiedingen/nu'],
-  plus: ['https://www.plus.nl/aanbiedingen'],
+  plus: ['https://www.plus.nl/aanbiedingen', 'https://www.folderz.nl/winkels/plus/aanbiedingen'],
 };
 const MIN_OK = 10; // minder gevonden? dan blijven de oude aanbiedingen van die winkel staan
 
@@ -45,7 +45,7 @@ async function pageText(browser, store, url) {
     last = h;
   }
   const text = await page.evaluate(() => document.body.innerText);
-  fs.writeFileSync(`debug-${store}.txt`, text);
+  fs.appendFileSync(`debug-${store}.txt`, `\n\n===== ${url} =====\n` + text);
   await ctx.close();
   return text;
 }

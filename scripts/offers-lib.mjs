@@ -22,6 +22,8 @@ const PROMO = [
   /^\d+\s*(gram|g|stuks?)\s*voor\s*€?\s*\d/i,
 ];
 const isPromo = l => PROMO.some(r => r.test(l));
+// geen boodschappen: spellen, spaaracties, bezorging, prijsranges
+const SKIP_NAME = /\b(spel(len)?|spaar|sparen|punten|bezorg|kortingscode|cadeaukaart|tickets?|abonnement|online spellen)\b|^\d+[.,]\d{2}\s*-\s*\d+[.,]\d{2}$|^per \d/i;
 const DATE_RE = new RegExp(`(?:t\\/m|tot en met)\\s*(?:${DAY}\\s*)?(\\d{1,2})\\s*([a-z]{3,})`, 'i');
 const NOISE = /^(bekijk|bekijken|in winkelwagen|toevoegen|meer info|alleen online|alleen in de winkel|online|nieuw|op=op|aanbieding|aanbiedingen|filter|sorteer|per gangpad|nu in de aanbieding|toon meer|meer laden|ga naar|lees meer|\+|-|€|€\s*\d.*|\d+[.,]?\d*)$/i;
 
@@ -58,13 +60,13 @@ export function parseOffers(text, store, { now = new Date(), defaultValidTo } = 
     if (!isPromo(l) || l.length > 60) continue;
     // productnaam: dichtstbijzijnde regel ervoor (of erna) die geen actie, datum of knop is
     let name = null;
-    for (const j of [i - 1, i - 2, i - 3, i + 1, i + 2]) {
+    for (const j of [i + 1, i + 2, i - 1, i - 2]) {
       const c = lines[j];
-      if (!c || isPromo(c) || DATE_RE.test(c) || NOISE.test(c) || c.length < 3 || c.length > 120) continue;
+      if (!c || isPromo(c) || DATE_RE.test(c) || NOISE.test(c) || c.length < 3 || c.length > 120 || /^per \d/i.test(c) || /^[\d.,\s-]+$/.test(c)) continue;
       if (/^(wo|do|vr|za|zo|ma|di)\b.*\d/i.test(c)) continue;
       name = c; break;
     }
-    if (!name) continue;
+    if (!name || SKIP_NAME.test(name)) continue;
     let validTo = null;
     for (const j of [i, i + 1, i + 2, i + 3, i - 1, i - 2]) { if (validTo) break; if (lines[j] && !(j < i && isPromo(lines[j]))) validTo = parseDate(lines[j], now); }
     const deal = cleanDeal(l);
