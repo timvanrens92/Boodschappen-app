@@ -1,4 +1,4 @@
-// Haalt elke week de aanbiedingen van Jumbo en PLUS op en zet ze in Supabase.
+// Haalt elke week de aanbiedingen van Jumbo en PLUS op en zet ze in Supabase (laatst getest 12 nov 2026).
 // Draait in GitHub Actions (zie .github/workflows/offers.yml).
 // Nodig: SUPABASE_URL en SUPABASE_SERVICE_ROLE_KEY als omgevingsvariabelen.
 import fs from 'node:fs';
