@@ -5,6 +5,11 @@ on:
     # elke woensdag 05:17 UTC (06:17 in de winter, 07:17 in de zomer)
     - cron: '17 5 * * 3'
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/**'
+      - '.github/workflows/offers.yml'
 
 jobs:
   fetch:
