@@ -68,6 +68,21 @@ async function main() {
     for (const o of found[store]) if (!m.has(norm(o.name))) m.set(norm(o.name), o);
     found[store] = [...m.values()].filter(o => !o.validTo || o.validTo >= today);
     console.log(`[${store}] ${found[store].length} aanbiedingen herkend`);
+    found[store].slice(0, 12).forEach(o => console.log(`  [${store}] ${o.deal} | ${o.name} | t/m ${o.validTo} | ${o.category}`));
+    if (process.env.DEBUG_TEXT || found[store].length < MIN_OK) {
+      try {
+        const lines = fs.readFileSync(`debug-${store}.txt`, 'utf8').split(/\n+/).map(l => l.trim()).filter(Boolean);
+        console.log(`  [${store}] paginatekst: ${lines.length} regels; fragment rond acties:`);
+        let shown = 0;
+        for (let i = 0; i < lines.length && shown < 25; i++) {
+          if (/gratis|korting|halve prijs|\d+\s*voor|^voor\b|actie/i.test(lines[i])) {
+            console.log('  >> ' + lines.slice(Math.max(0, i - 3), i + 4).map(x => x.slice(0, 70)).join(' ¦ '));
+            shown++; i += 3;
+          }
+        }
+        if (!shown) console.log('  >> eerste regels: ' + lines.slice(0, 60).map(x => x.slice(0, 50)).join(' ¦ '));
+      } catch (_) {}
+    }
   }
   await browser.close();
 
